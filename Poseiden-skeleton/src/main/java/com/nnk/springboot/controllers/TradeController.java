@@ -16,8 +16,7 @@ public class TradeController {
     // TODO: Inject Trade service
 
     @RequestMapping("/trade/list")
-    public String home(Model model)
-    {
+    public String home(Model model) {
         // TODO: find all Trade, add to model
         return "trade/list";
     }
@@ -41,8 +40,9 @@ public class TradeController {
 
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
+            BindingResult result, Model model) {
+        // TODO: check required fields, if valid call service to update Trade and return
+        // Trade list
         return "redirect:/trade/list";
     }
 
