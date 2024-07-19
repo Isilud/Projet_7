@@ -26,7 +26,11 @@ public class Rating {
     private String fitchRating;
 
     @Column(name = "orderNumber")
-    private Byte orderNumber;
+    private Integer orderNumber;
+
+    public Rating(String string, String string2, String string3, int i) {
+        // TODO Auto-generated constructor stub
+    }
 
     public Integer getId() {
         return id;
@@ -60,11 +64,11 @@ public class Rating {
         this.fitchRating = fitchRating;
     }
 
-    public Byte getOrderNumber() {
+    public Integer getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(Byte orderNumber) {
+    public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
     }
 }

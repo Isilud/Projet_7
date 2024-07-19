@@ -34,6 +34,10 @@ public class RuleName {
     @Column(name = "sqlPart", length = 125)
     private String sqlPart;
 
+    public RuleName(String string, String string2, String string3, String string4, String string5, String string6) {
+        // TODO Auto-generated constructor stub
+    }
+
     public Integer getId() {
         return id;
     }

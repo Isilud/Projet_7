@@ -19,7 +19,7 @@ public class CurvePoint {
     private Integer id;
 
     @Column(name = "CurveId")
-    private Byte curveId;
+    private Integer curveId;
 
     @Column(name = "asOfDate")
     private Instant asOfDate;
@@ -33,6 +33,10 @@ public class CurvePoint {
     @Column(name = "creationDate")
     private Instant creationDate;
 
+    public CurvePoint(int i, double d, double e) {
+        // TODO Auto-generated constructor stub
+    }
+
     public Integer getId() {
         return id;
     }
@@ -41,11 +45,11 @@ public class CurvePoint {
         this.id = id;
     }
 
-    public Byte getCurveId() {
+    public Integer getCurveId() {
         return curveId;
     }
 
-    public void setCurveId(Byte curveId) {
+    public void setCurveId(Integer curveId) {
         this.curveId = curveId;
     }
 
