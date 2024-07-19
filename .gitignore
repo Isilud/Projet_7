@@ -1,3 +1,7 @@
 .vscode
-env.properties
 Poseiden-skeleton/target
+Poseiden-skeleton/env.properties
+Poseiden-skeleton/.env
+Poseiden-skeleton/docker
+Poseiden-skeleton/src/main/resources/application-prod.properties
+Poseiden-skeleton/src/main/resources/application.properties
