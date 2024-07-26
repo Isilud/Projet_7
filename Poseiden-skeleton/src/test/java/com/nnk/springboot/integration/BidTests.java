@@ -1,7 +1,7 @@
 package com.nnk.springboot.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.model.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 
 import org.junit.jupiter.api.Test;

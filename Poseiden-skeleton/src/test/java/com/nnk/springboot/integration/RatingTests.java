@@ -1,6 +1,6 @@
 package com.nnk.springboot.integration;
 
-import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.model.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
 
 import org.junit.jupiter.api.Test;

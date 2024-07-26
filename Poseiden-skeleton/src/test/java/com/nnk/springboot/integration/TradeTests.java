@@ -1,6 +1,6 @@
 package com.nnk.springboot.integration;
 
-import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.model.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
 
 import org.junit.jupiter.api.Test;

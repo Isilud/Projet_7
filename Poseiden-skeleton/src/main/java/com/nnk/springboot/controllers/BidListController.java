@@ -1,6 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.model.BidList;
 import com.nnk.springboot.services.BidListService;
 
 import org.springframework.stereotype.Controller;
