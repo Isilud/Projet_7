@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.model.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 
 @Service

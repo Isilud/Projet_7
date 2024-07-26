@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
 
 @Controller
 @RequestMapping("app")
 public class LoginController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("login")
@@ -27,7 +27,7 @@ public class LoginController {
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
+        mav.addObject("users", userService.getAllUser());
         mav.setViewName("user/list");
         return mav;
     }
