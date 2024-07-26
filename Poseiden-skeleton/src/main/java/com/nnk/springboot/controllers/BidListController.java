@@ -1,7 +1,6 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.BidListService;
 
 import org.springframework.stereotype.Controller;
@@ -17,10 +16,10 @@ import jakarta.validation.Valid;
 @Controller
 public class BidListController {
 
-    private BidListService bidListService;
+    private final BidListService bidListService;
 
-    public BidListController(BidListRepository bidListRepository) {
-        this.bidListService = new BidListService(bidListRepository);
+    public BidListController(BidListService bidListService) {
+        this.bidListService = bidListService;
     }
 
     @RequestMapping("/bidList/list")

@@ -3,12 +3,15 @@ package com.nnk.springboot.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 
+@Service
 public class BidListService {
 
-    private BidListRepository bidListRepository;
+    private final BidListRepository bidListRepository;
 
     public BidListService(BidListRepository bidListRepository) {
         this.bidListRepository = bidListRepository;
