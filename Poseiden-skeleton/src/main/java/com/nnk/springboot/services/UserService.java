@@ -21,12 +21,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void saveUser(User bid) {
-        userRepository.save(bid);
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
-    public void deleteUser(User bid) {
-        userRepository.delete(bid);
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     public Optional<User> getUser(Integer id) {
