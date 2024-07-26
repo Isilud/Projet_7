@@ -11,26 +11,26 @@ import com.nnk.springboot.repositories.RatingRepository;
 @Service
 public class RatingService {
 
-    private final RatingRepository RatingRepository;
+    private final RatingRepository ratingRepository;
 
-    public RatingService(RatingRepository RatingRepository) {
-        this.RatingRepository = RatingRepository;
+    public RatingService(RatingRepository ratingRepository) {
+        this.ratingRepository = ratingRepository;
     }
 
     public List<Rating> getAllRating() {
-        return RatingRepository.findAll();
+        return ratingRepository.findAll();
     }
 
     public void saveRating(Rating rating) {
-        RatingRepository.save(rating);
+        ratingRepository.save(rating);
     }
 
     public void deleteRating(Rating rating) {
-        RatingRepository.delete(rating);
+        ratingRepository.delete(rating);
     }
 
     public Optional<Rating> getRating(Integer id) {
-        return RatingRepository.findById(id);
+        return ratingRepository.findById(id);
     }
 
 }
