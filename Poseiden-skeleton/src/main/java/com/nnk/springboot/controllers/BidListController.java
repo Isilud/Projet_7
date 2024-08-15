@@ -6,10 +6,11 @@ import com.nnk.springboot.services.BidListService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.Valid;
 
@@ -22,10 +23,10 @@ public class BidListController {
         this.bidListService = bidListService;
     }
 
-    @RequestMapping("/bidList/list")
+    @GetMapping("/bidList/list")
     public String home(Model model) {
         model.addAttribute("bids", bidListService.getAllBidList());
-        return "/bidList/list";
+        return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
@@ -34,7 +35,7 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
+    public String validate(@RequestBody @Valid BidList bid, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             bidListService.saveBidList(bid);
             model.addAttribute("bids", bidListService.getAllBidList());
@@ -43,7 +44,7 @@ public class BidListController {
         return "bidList/add";
     }
 
-    @GetMapping("/bidList/update/{id}")
+    @GetMapping("/bidList/find/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         BidList bid = bidListService.getBidList(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid bid list Id:" + id));
@@ -52,7 +53,8 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
+    public String updateBid(@PathVariable("id") Integer id,
+            @RequestBody @Valid BidList bidList,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "bidList/update";
@@ -60,11 +62,11 @@ public class BidListController {
 
         bidList.setBidListId(id);
         bidListService.saveBidList(bidList);
-        model.addAttribute("bidLists", bidListService.getAllBidList());
+        model.addAttribute("bids", bidListService.getAllBidList());
         return "redirect:/bidList/list";
     }
 
-    @GetMapping("/bidList/delete/{id}")
+    @DeleteMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         BidList bidList = bidListService.getBidList(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));

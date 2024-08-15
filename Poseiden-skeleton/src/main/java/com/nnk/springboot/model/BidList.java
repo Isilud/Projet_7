@@ -21,6 +21,9 @@ public class BidList {
         this.bidQuantity = bidQuantity;
     }
 
+    public BidList() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "BidListId")
@@ -35,7 +38,7 @@ public class BidList {
     private String type;
 
     @Column(name = "bidQuantity")
-    @NotNull(message = "Account is mandatory")
+    @NotNull(message = "BidQuantity is mandatory")
     private Double bidQuantity;
 
     @Column(name = "askQuantity")
