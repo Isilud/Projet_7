@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "rulename")
@@ -17,25 +18,36 @@ public class RuleName {
     private Integer id;
 
     @Column(name = "name", length = 125)
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(name = "description", length = 125)
+    @NotBlank(message = "Description is mandatory")
     private String description;
 
     @Column(name = "json", length = 125)
+    @NotBlank(message = "Json is mandatory")
     private String json;
 
     @Column(name = "template", length = 512)
+    @NotBlank(message = "Template is mandatory")
     private String template;
 
     @Column(name = "sqlStr", length = 125)
+    @NotBlank(message = "SqlStr is mandatory")
     private String sqlStr;
 
     @Column(name = "sqlPart", length = 125)
+    @NotBlank(message = "SqlPart is mandatory")
     private String sqlPart;
 
-    public RuleName(String string, String string2, String string3, String string4, String string5, String string6) {
-        // TODO Auto-generated constructor stub
+    public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart) {
+        this.name = name;
+        this.description = description;
+        this.json = json;
+        this.template = template;
+        this.sqlStr = sqlStr;
+        this.sqlPart = sqlPart;
     }
 
     public Integer getId() {

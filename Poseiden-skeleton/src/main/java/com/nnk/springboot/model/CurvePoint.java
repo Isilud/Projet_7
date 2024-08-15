@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "curvepoint")
@@ -19,22 +20,27 @@ public class CurvePoint {
     private Integer id;
 
     @Column(name = "CurveId")
+    @NotNull(message = "CurveId is mandatory")
     private Integer curveId;
 
     @Column(name = "asOfDate")
     private Instant asOfDate;
 
     @Column(name = "term")
+    @NotNull(message = "Term is mandatory")
     private Double term;
 
     @Column(name = "value")
+    @NotNull(message = "Value is mandatory")
     private Double value;
 
     @Column(name = "creationDate")
     private Instant creationDate;
 
-    public CurvePoint(int i, double d, double e) {
-        // TODO Auto-generated constructor stub
+    public CurvePoint(int curveId, double term, double value) {
+        this.curveId = curveId;
+        this.term = term;
+        this.value = value;
     }
 
     public Integer getId() {

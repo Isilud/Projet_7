@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -15,15 +16,19 @@ public class User {
     private Integer id;
 
     @Column(nullable = false)
+    @NotNull(message = "UserName is mandatory")
     private String username;
 
     @Column(nullable = false)
+    @NotNull(message = "Password is mandatory")
     private String password;
 
     @Column(nullable = false)
+    @NotNull(message = "FullName is mandatory")
     private String fullname;
 
     @Column(nullable = false)
+    @NotNull(message = "Role is mandatory")
     private String role;
 
     public Integer getId() {
