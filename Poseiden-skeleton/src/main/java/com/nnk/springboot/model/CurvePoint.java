@@ -78,11 +78,11 @@ public class CurvePoint {
         this.term = term;
     }
 
-    public Double getValue() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setValue(Double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

@@ -1,8 +1,5 @@
 package com.nnk.springboot.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.model.BidList;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -34,8 +31,6 @@ public class BidTests {
 
 	@Test
 	public void bidListTest() throws Exception {
-		BidList bid = new BidList("Account Test", "Type Test", 10d);
-		String bidAsJson = new ObjectMapper().writeValueAsString(bid);
 
 		// Initial state
 		mockMvc.perform(
@@ -45,10 +40,12 @@ public class BidTests {
 				.andExpect(model().attribute("bids", hasSize(0)));
 
 		// Save
-		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/validate").content(
-				bidAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("account", "Account Test")
+				.param("type", "Type Test")
+				.param("bidQuantity", "10"))
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
@@ -64,12 +61,12 @@ public class BidTests {
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(10d))));
 
 		// Update
-		bid.setBidQuantity(20d);
-		bidAsJson = new ObjectMapper().writeValueAsString(bid);
-		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/update/1").content(
-				bidAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.put("/bidList/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("account", "Account Test")
+				.param("type", "Type Test")
+				.param("bidQuantity", "20"))
+				.andExpect(status().isOk());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/update/1"))
@@ -78,10 +75,8 @@ public class BidTests {
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(20d))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/bidList/delete/1").content(
-				bidAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/bidList/delete/1"))
+				.andExpect(status().isNoContent());
 
 		// Final State
 		mockMvc.perform(
@@ -90,5 +85,33 @@ public class BidTests {
 				.andExpect(model().attributeExists("bids"))
 				.andExpect(model().attribute("bids", hasSize(0)));
 
+	}
+
+	@Test
+	public void bidListErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("bidList", "account"))
+				.andExpect(model().attributeHasFieldErrors("bidList", "type"))
+				.andExpect(model().attributeHasFieldErrors("bidList", "bidQuantity"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/bidList/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("bidList", "account"))
+				.andExpect(model().attributeHasFieldErrors("bidList", "type"))
+				.andExpect(model().attributeHasFieldErrors("bidList", "bidQuantity"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/bidList/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/bidList/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 }

@@ -1,7 +1,5 @@
 package com.nnk.springboot.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.model.CurvePoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -33,8 +31,6 @@ public class CurvePointTests {
 
 	@Test
 	public void curvePointTest() throws Exception {
-		CurvePoint curve = new CurvePoint(10, 10d, 30d);
-		String curveAsJson = new ObjectMapper().writeValueAsString(curve);
 
 		// Initial state
 		mockMvc.perform(
@@ -44,10 +40,12 @@ public class CurvePointTests {
 				.andExpect(model().attribute("curves", hasSize(0)));
 
 		// Save
-		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate").content(
-				curveAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("curveId", "10")
+				.param("term", "10")
+				.param("amount", "30"))
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/list"))
@@ -63,12 +61,12 @@ public class CurvePointTests {
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(10))));
 
 		// Update
-		curve.setCurveId(20);
-		curveAsJson = new ObjectMapper().writeValueAsString(curve);
-		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1").content(
-				curveAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.put("/curvePoint/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("curveId", "20")
+				.param("term", "10.")
+				.param("amount", "30."))
+				.andExpect(status().isOk());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/update/1"))
@@ -77,10 +75,8 @@ public class CurvePointTests {
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(20))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1").content(
-				curveAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1"))
+				.andExpect(status().isNoContent());
 
 		// Final State
 		mockMvc.perform(
@@ -88,6 +84,34 @@ public class CurvePointTests {
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("curves"))
 				.andExpect(model().attribute("curves", hasSize(0)));
+	}
+
+	@Test
+	public void curveErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("curve", "curveId"))
+				.andExpect(model().attributeHasFieldErrors("curve", "term"))
+				.andExpect(model().attributeHasFieldErrors("curve", "amount"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/curvePoint/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("curve", "curveId"))
+				.andExpect(model().attributeHasFieldErrors("curve", "term"))
+				.andExpect(model().attributeHasFieldErrors("curve", "amount"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 
 }

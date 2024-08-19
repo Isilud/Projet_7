@@ -1,7 +1,5 @@
 package com.nnk.springboot.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -33,8 +31,6 @@ public class UserTests {
 
 	@Test
 	public void userTest() throws Exception {
-		User user = new User("Username", "Password", "Fullname", "User");
-		String userAsJson = new ObjectMapper().writeValueAsString(user);
 
 		// Initial state
 		mockMvc.perform(
@@ -44,10 +40,13 @@ public class UserTests {
 				.andExpect(model().attribute("users", hasSize(0)));
 
 		// Save
-		mockMvc.perform(MockMvcRequestBuilders.post("/user/validate").content(
-				userAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.post("/user/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("username", "Username")
+				.param("password", "Password")
+				.param("fullname", "Fullname")
+				.param("role", "USER"))
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/list"))
@@ -64,12 +63,13 @@ public class UserTests {
 				.andExpect(model().attribute("user", hasProperty("password", is(""))));
 
 		// Update
-		user.setUsername("Username Updated");
-		userAsJson = new ObjectMapper().writeValueAsString(user);
-		mockMvc.perform(MockMvcRequestBuilders.post("/user/update/1").content(
-				userAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.put("/user/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("username", "Username Updated")
+				.param("password", "Password")
+				.param("fullname", "Fullname")
+				.param("role", "USER"))
+				.andExpect(status().isOk());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/update/1"))
@@ -79,10 +79,8 @@ public class UserTests {
 				.andExpect(model().attribute("user", hasProperty("password", is(""))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/user/delete/1").content(
-				userAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/user/delete/1"))
+				.andExpect(status().isNoContent());
 
 		// Final State
 		mockMvc.perform(
@@ -90,5 +88,35 @@ public class UserTests {
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("users"))
 				.andExpect(model().attribute("users", hasSize(0)));
+	}
+
+	@Test
+	public void userErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/user/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("user", "username"))
+				.andExpect(model().attributeHasFieldErrors("user", "password"))
+				.andExpect(model().attributeHasFieldErrors("user", "fullname"))
+				.andExpect(model().attributeHasFieldErrors("user", "role"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/user/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("user", "username"))
+				.andExpect(model().attributeHasFieldErrors("user", "password"))
+				.andExpect(model().attributeHasFieldErrors("user", "fullname"))
+				.andExpect(model().attributeHasFieldErrors("user", "role"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/user/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 }

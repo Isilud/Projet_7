@@ -1,7 +1,5 @@
 package com.nnk.springboot.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.model.Trade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -33,8 +31,6 @@ public class TradeTests {
 
 	@Test
 	public void tradeTest() throws Exception {
-		Trade trade = new Trade("Trade Account", "Type");
-		String tradeAsJson = new ObjectMapper().writeValueAsString(trade);
 
 		// Initial state
 		mockMvc.perform(
@@ -44,10 +40,11 @@ public class TradeTests {
 				.andExpect(model().attribute("trades", hasSize(0)));
 
 		// Save
-		mockMvc.perform(MockMvcRequestBuilders.post("/trade/validate").content(
-				tradeAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.post("/trade/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("account", "Trade Account")
+				.param("type", "Type"))
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/trade/list"))
@@ -63,12 +60,11 @@ public class TradeTests {
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account"))));
 
 		// Update
-		trade.setAccount("Trade Account Update");
-		tradeAsJson = new ObjectMapper().writeValueAsString(trade);
-		mockMvc.perform(MockMvcRequestBuilders.post("/trade/update/1").content(
-				tradeAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.put("/trade/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("account", "Trade Account Update")
+				.param("type", "Type"))
+				.andExpect(status().isOk());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/trade/update/1"))
@@ -77,10 +73,8 @@ public class TradeTests {
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account Update"))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/trade/delete/1").content(
-				tradeAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/trade/delete/1"))
+				.andExpect(status().isNoContent());
 
 		// Final State
 		mockMvc.perform(
@@ -88,5 +82,31 @@ public class TradeTests {
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("trades"))
 				.andExpect(model().attribute("trades", hasSize(0)));
+	}
+
+	@Test
+	public void tradeErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/trade/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("trade", "account"))
+				.andExpect(model().attributeHasFieldErrors("trade", "type"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/trade/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("trade", "account"))
+				.andExpect(model().attributeHasFieldErrors("trade", "type"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/trade/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/trade/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 }

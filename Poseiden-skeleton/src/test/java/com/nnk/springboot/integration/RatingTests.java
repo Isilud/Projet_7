@@ -1,7 +1,5 @@
 package com.nnk.springboot.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.model.Rating;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -33,8 +31,6 @@ public class RatingTests {
 
 	@Test
 	public void ratingTest() throws Exception {
-		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-		String ratingAsJson = new ObjectMapper().writeValueAsString(rating);
 
 		// Initial state
 		mockMvc.perform(
@@ -44,10 +40,13 @@ public class RatingTests {
 				.andExpect(model().attribute("ratings", hasSize(0)));
 
 		// Save
-		mockMvc.perform(MockMvcRequestBuilders.post("/rating/validate").content(
-				ratingAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("moodysRating", "Moodys Rating")
+				.param("sandPRating", "Sand PRating")
+				.param("fitchRating", "Fitch Rating")
+				.param("orderNumber", "10"))
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/list"))
@@ -63,12 +62,13 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(10))));
 
 		// Update
-		rating.setOrderNumber(20);
-		ratingAsJson = new ObjectMapper().writeValueAsString(rating);
-		mockMvc.perform(MockMvcRequestBuilders.post("/rating/update/1").content(
-				ratingAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("moodysRating", "Moodys Rating")
+				.param("sandPRating", "Sand PRating")
+				.param("fitchRating", "Fitch Rating")
+				.param("orderNumber", "20"))
+				.andExpect(status().isOk());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/update/1"))
@@ -77,10 +77,8 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(20))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1").content(
-				ratingAsJson)
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isFound());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
+				.andExpect(status().isNoContent());
 
 		// Final State
 		mockMvc.perform(
@@ -88,5 +86,35 @@ public class RatingTests {
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("ratings"))
 				.andExpect(model().attribute("ratings", hasSize(0)));
+	}
+
+	@Test
+	public void userErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("rating", "moodysRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "sandPRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "fitchRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "orderNumber"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("rating", "moodysRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "sandPRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "fitchRating"))
+				.andExpect(model().attributeHasFieldErrors("rating", "orderNumber"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/rating/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 }
