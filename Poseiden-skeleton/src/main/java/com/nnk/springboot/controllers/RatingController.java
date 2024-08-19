@@ -3,9 +3,11 @@ package com.nnk.springboot.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.model.Rating;
@@ -34,7 +36,7 @@ public class RatingController {
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
+    public String validate(@RequestBody @Valid Rating rating, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             ratingService.saveRating(rating);
             model.addAttribute("ratings", ratingService.getAllRating());
@@ -43,7 +45,7 @@ public class RatingController {
         return "rating/add";
     }
 
-    @GetMapping("/rating/update/{id}")
+    @GetMapping("/rating/find/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Rating rating = ratingService.getRating(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rating list Id:" + id));
@@ -52,7 +54,7 @@ public class RatingController {
     }
 
     @PostMapping("/rating/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid Rating rating,
+    public String updateBid(@PathVariable("id") Integer id, @RequestBody @Valid Rating rating,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "rating/update";
@@ -64,7 +66,7 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
-    @GetMapping("/rating/delete/{id}")
+    @DeleteMapping("/rating/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         Rating rating = ratingService.getRating(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));

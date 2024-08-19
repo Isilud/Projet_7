@@ -21,16 +21,16 @@ import com.nnk.springboot.services.CurvePointService;
 public class CurvePointServiceTest {
 
     @Mock
-    private CurvePointRepository bidListRepository;
+    private CurvePointRepository curvePointRepository;
 
-    public CurvePointService bidListService;
+    public CurvePointService curvePointService;
 
     CurvePoint defaultCurvePoint;
 
     @BeforeEach
     public void setup() {
         defaultCurvePoint = new CurvePoint(10, 5, 5.);
-        bidListService = new CurvePointService(bidListRepository);
+        curvePointService = new CurvePointService(curvePointRepository);
     }
 
     @Test
@@ -38,32 +38,32 @@ public class CurvePointServiceTest {
         List<CurvePoint> allCurvePoint = new ArrayList<CurvePoint>();
         allCurvePoint.add(defaultCurvePoint);
 
-        when(bidListRepository.findAll()).thenReturn(allCurvePoint);
-        bidListService.getAllCurvePoint();
+        when(curvePointRepository.findAll()).thenReturn(allCurvePoint);
+        curvePointService.getAllCurvePoint();
 
-        verify(bidListRepository).findAll();
+        verify(curvePointRepository).findAll();
     }
 
     @Test
     public void getCurvePointTest() {
-        when(bidListRepository.findById(1)).thenReturn(Optional.of(defaultCurvePoint));
-        bidListService.getCurvePoint(1);
+        when(curvePointRepository.findById(1)).thenReturn(Optional.of(defaultCurvePoint));
+        curvePointService.getCurvePoint(1);
 
-        verify(bidListRepository).findById(1);
+        verify(curvePointRepository).findById(1);
     }
 
     @Test
     public void saveCurvePointTest() {
-        bidListService.saveCurvePoint(defaultCurvePoint);
+        curvePointService.saveCurvePoint(defaultCurvePoint);
 
-        verify(bidListRepository).save(defaultCurvePoint);
+        verify(curvePointRepository).save(defaultCurvePoint);
     }
 
     @Test
     public void deleteCurvePointTest() {
-        bidListService.deleteCurvePoint(defaultCurvePoint);
+        curvePointService.deleteCurvePoint(defaultCurvePoint);
 
-        verify(bidListRepository).delete(defaultCurvePoint);
+        verify(curvePointRepository).delete(defaultCurvePoint);
     }
 
 }

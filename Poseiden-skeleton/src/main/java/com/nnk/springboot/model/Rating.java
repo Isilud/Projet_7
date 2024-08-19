@@ -13,6 +13,16 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "rating")
 public class Rating {
 
+    public Rating() {
+    }
+
+    public Rating(String moodysRating, String sandPRating, String fitchRating, int orderNumber) {
+        this.moodysRating = moodysRating;
+        this.sandPRating = sandPRating;
+        this.fitchRating = fitchRating;
+        this.orderNumber = orderNumber;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id")
@@ -33,13 +43,6 @@ public class Rating {
     @Column(name = "orderNumber")
     @NotNull(message = "OrderNumber is mandatory")
     private Integer orderNumber;
-
-    public Rating(String moodysRating, String sandPRating, String fitchRating, int orderNumber) {
-        this.moodysRating = moodysRating;
-        this.sandPRating = sandPRating;
-        this.fitchRating = fitchRating;
-        this.orderNumber = orderNumber;
-    }
 
     public Integer getId() {
         return id;
