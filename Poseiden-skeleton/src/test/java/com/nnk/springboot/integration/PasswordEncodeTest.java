@@ -1,17 +1,17 @@
 package com.nnk.springboot.integration;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-/**
- * Created by Khang Nguyen.
- * Email: khang.nguyen@banvien.com
- * Date: 09/03/2019
- * Time: 11:26 AM
- */
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
+@TestInstance(Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class PasswordEncodeTest {
     @Test
     public void testPassword() {
