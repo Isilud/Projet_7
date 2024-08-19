@@ -3,9 +3,11 @@ package com.nnk.springboot.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.model.RuleName;
@@ -34,7 +36,7 @@ public class RuleNameController {
     }
 
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid RuleName rule, BindingResult result, Model model) {
+    public String validate(@RequestBody @Valid RuleName rule, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             ruleNameService.saveRuleName(rule);
             model.addAttribute("rules", ruleNameService.getAllRuleName());
@@ -43,7 +45,7 @@ public class RuleNameController {
         return "ruleName/add";
     }
 
-    @GetMapping("/ruleName/update/{id}")
+    @GetMapping("/ruleName/find/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         RuleName rule = ruleNameService.getRuleName(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rule list Id:" + id));
@@ -52,7 +54,8 @@ public class RuleNameController {
     }
 
     @PostMapping("/ruleName/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid RuleName rule,
+    public String updateBid(@PathVariable("id") Integer id,
+            @RequestBody @Valid RuleName rule,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "ruleName/update";
@@ -64,7 +67,7 @@ public class RuleNameController {
         return "redirect:/ruleName/list";
     }
 
-    @GetMapping("/ruleName/delete/{id}")
+    @DeleteMapping("/ruleName/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         RuleName rule = ruleNameService.getRuleName(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rule Id:" + id));
