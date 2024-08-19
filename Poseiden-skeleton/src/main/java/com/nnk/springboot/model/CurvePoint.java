@@ -1,6 +1,6 @@
 package com.nnk.springboot.model;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +14,15 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "curvepoint")
 public class CurvePoint {
 
+    public CurvePoint() {
+    }
+
+    public CurvePoint(int curveId, double term, double amount) {
+        this.curveId = curveId;
+        this.term = term;
+        this.amount = amount;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id")
@@ -24,24 +33,18 @@ public class CurvePoint {
     private Integer curveId;
 
     @Column(name = "asOfDate")
-    private Instant asOfDate;
+    private LocalDateTime asOfDate;
 
     @Column(name = "term")
     @NotNull(message = "Term is mandatory")
     private Double term;
 
-    @Column(name = "value")
-    @NotNull(message = "Value is mandatory")
-    private Double value;
+    @Column(name = "amount")
+    @NotNull(message = "Amount is mandatory")
+    private Double amount;
 
     @Column(name = "creationDate")
-    private Instant creationDate;
-
-    public CurvePoint(int curveId, double term, double value) {
-        this.curveId = curveId;
-        this.term = term;
-        this.value = value;
-    }
+    private LocalDateTime creationDate;
 
     public Integer getId() {
         return id;
@@ -59,11 +62,11 @@ public class CurvePoint {
         this.curveId = curveId;
     }
 
-    public Instant getAsOfDate() {
+    public LocalDateTime getAsOfDate() {
         return asOfDate;
     }
 
-    public void setAsOfDate(Instant asOfDate) {
+    public void setAsOfDate(LocalDateTime asOfDate) {
         this.asOfDate = asOfDate;
     }
 
@@ -76,18 +79,18 @@ public class CurvePoint {
     }
 
     public Double getValue() {
-        return value;
+        return amount;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public void setValue(Double amount) {
+        this.amount = amount;
     }
 
-    public Instant getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Instant creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 }

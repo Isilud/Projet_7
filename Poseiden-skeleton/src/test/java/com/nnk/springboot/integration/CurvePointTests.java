@@ -1,49 +1,93 @@
 package com.nnk.springboot.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.model.CurvePoint;
-import com.nnk.springboot.repositories.CurvePointRepository;
-
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-import java.util.Optional;
-
-// @SpringBootTest
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
+@TestInstance(Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class CurvePointTests {
 
-	@Autowired
-	private CurvePointRepository curvePointRepository;
+	private final MockMvc mockMvc;
+
+	public CurvePointTests(@Autowired MockMvc mockMvc) {
+		this.mockMvc = mockMvc;
+	}
 
 	@Test
-	public void curvePointTest() {
-		CurvePoint curvePoint = new CurvePoint(10, 10d, 30d);
+	public void curvePointTest() throws Exception {
+		CurvePoint curve = new CurvePoint(10, 10d, 30d);
+		String curveAsJson = new ObjectMapper().writeValueAsString(curve);
+
+		// Initial state
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/curvePoint/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("curves"))
+				.andExpect(model().attribute("curves", hasSize(0)));
 
 		// Save
-		curvePoint = curvePointRepository.save(curvePoint);
-		assertNotNull(curvePoint.getId());
-		assertTrue(curvePoint.getCurveId() == 10);
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate").content(
+				curveAsJson)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isFound());
 
-		// Update
-		curvePoint.setCurveId(20);
-		curvePoint = curvePointRepository.save(curvePoint);
-		assertTrue(curvePoint.getCurveId() == 20);
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/curvePoint/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("curves"))
+				.andExpect(model().attribute("curves", hasSize(1)));
 
 		// Find
-		List<CurvePoint> listResult = curvePointRepository.findAll();
-		assertTrue(listResult.size() > 0);
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/curvePoint/find/1"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("curve"))
+				.andExpect(model().attribute("curve", hasProperty("curveId", is(10))));
+
+		// Update
+		curve.setCurveId(20);
+		curveAsJson = new ObjectMapper().writeValueAsString(curve);
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1").content(
+				curveAsJson)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isFound());
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/curvePoint/find/1"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("curve"))
+				.andExpect(model().attribute("curve", hasProperty("curveId", is(20))));
 
 		// Delete
-		Integer id = curvePoint.getId();
-		curvePointRepository.delete(curvePoint);
-		Optional<CurvePoint> curvePointList = curvePointRepository.findById(id);
-		assertFalse(curvePointList.isPresent());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1").content(
+				curveAsJson)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isFound());
+
+		// Final State
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/curvePoint/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("curves"))
+				.andExpect(model().attribute("curves", hasSize(0)));
 	}
 
 }
