@@ -57,7 +57,7 @@ public class RatingTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/rating/find/1"))
+				MockMvcRequestBuilders.get("/rating/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("rating"))
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(10))));
@@ -71,7 +71,7 @@ public class RatingTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/rating/find/1"))
+				MockMvcRequestBuilders.get("/rating/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("rating"))
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(20))));

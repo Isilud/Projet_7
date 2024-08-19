@@ -57,7 +57,7 @@ public class UserTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/user/find/1"))
+				MockMvcRequestBuilders.get("/user/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("user"))
 				.andExpect(model().attribute("user", hasProperty("username", is("Username"))))
@@ -72,7 +72,7 @@ public class UserTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/user/find/1"))
+				MockMvcRequestBuilders.get("/user/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("user"))
 				.andExpect(model().attribute("user", hasProperty("username", is("Username Updated"))))

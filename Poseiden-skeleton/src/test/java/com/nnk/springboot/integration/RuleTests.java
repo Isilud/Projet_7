@@ -57,7 +57,7 @@ public class RuleTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/ruleName/find/1"))
+				MockMvcRequestBuilders.get("/ruleName/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("rule"))
 				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name"))));
@@ -71,7 +71,7 @@ public class RuleTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/ruleName/find/1"))
+				MockMvcRequestBuilders.get("/ruleName/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("rule"))
 				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name Update"))));

@@ -44,7 +44,7 @@ public class BidListController {
         return "bidList/add";
     }
 
-    @GetMapping("/bidList/find/{id}")
+    @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         BidList bid = bidListService.getBidList(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid bid list Id:" + id));

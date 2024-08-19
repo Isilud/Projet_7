@@ -57,7 +57,7 @@ public class TradeTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/trade/find/1"))
+				MockMvcRequestBuilders.get("/trade/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("trade"))
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account"))));
@@ -71,7 +71,7 @@ public class TradeTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/trade/find/1"))
+				MockMvcRequestBuilders.get("/trade/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("trade"))
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account Update"))));

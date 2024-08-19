@@ -57,7 +57,7 @@ public class CurvePointTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/curvePoint/find/1"))
+				MockMvcRequestBuilders.get("/curvePoint/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("curve"))
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(10))));
@@ -71,7 +71,7 @@ public class CurvePointTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/curvePoint/find/1"))
+				MockMvcRequestBuilders.get("/curvePoint/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("curve"))
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(20))));

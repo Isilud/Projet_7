@@ -58,7 +58,7 @@ public class BidTests {
 
 		// Find
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/bidList/find/1"))
+				MockMvcRequestBuilders.get("/bidList/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("bid"))
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(10d))));
@@ -72,7 +72,7 @@ public class BidTests {
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/bidList/find/1"))
+				MockMvcRequestBuilders.get("/bidList/update/1"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeExists("bid"))
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(20d))));

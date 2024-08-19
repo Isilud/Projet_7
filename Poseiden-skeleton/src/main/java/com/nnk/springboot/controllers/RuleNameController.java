@@ -45,7 +45,7 @@ public class RuleNameController {
         return "ruleName/add";
     }
 
-    @GetMapping("/ruleName/find/{id}")
+    @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         RuleName rule = ruleNameService.getRuleName(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rule list Id:" + id));

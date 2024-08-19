@@ -45,7 +45,7 @@ public class TradeController {
         return "trade/add";
     }
 
-    @GetMapping("/trade/find/{id}")
+    @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Trade trade = tradeService.getTrade(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trade list Id:" + id));

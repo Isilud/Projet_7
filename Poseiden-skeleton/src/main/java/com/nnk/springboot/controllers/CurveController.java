@@ -45,7 +45,7 @@ public class CurveController {
         return "curvePoint/add";
     }
 
-    @GetMapping("/curvePoint/find/{id}")
+    @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         CurvePoint curve = curvePointService.getCurvePoint(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid curve list Id:" + id));

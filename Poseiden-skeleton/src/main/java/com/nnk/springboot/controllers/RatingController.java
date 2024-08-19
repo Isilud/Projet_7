@@ -45,7 +45,7 @@ public class RatingController {
         return "rating/add";
     }
 
-    @GetMapping("/rating/find/{id}")
+    @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Rating rating = ratingService.getRating(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid rating list Id:" + id));

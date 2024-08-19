@@ -48,7 +48,7 @@ public class UserController {
         return "user/add";
     }
 
-    @GetMapping("/user/find/{id}")
+    @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = userService.getUser(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
