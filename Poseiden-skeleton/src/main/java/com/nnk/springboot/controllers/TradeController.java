@@ -3,9 +3,11 @@ package com.nnk.springboot.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.model.Trade;
@@ -34,7 +36,7 @@ public class TradeController {
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result, Model model) {
+    public String validate(@RequestBody @Valid Trade trade, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             tradeService.saveTrade(trade);
             model.addAttribute("trades", tradeService.getAllTrade());
@@ -43,7 +45,7 @@ public class TradeController {
         return "trade/add";
     }
 
-    @GetMapping("/trade/update/{id}")
+    @GetMapping("/trade/find/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Trade trade = tradeService.getTrade(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trade list Id:" + id));
@@ -52,7 +54,7 @@ public class TradeController {
     }
 
     @PostMapping("/trade/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid Trade trade,
+    public String updateBid(@PathVariable("id") Integer id, @RequestBody @Valid Trade trade,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "trade/update";
@@ -64,7 +66,7 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 
-    @GetMapping("/trade/delete/{id}")
+    @DeleteMapping("/trade/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         Trade trade = tradeService.getTrade(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
