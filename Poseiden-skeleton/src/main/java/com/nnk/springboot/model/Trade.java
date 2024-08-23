@@ -8,13 +8,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "trade")
 public class Trade {
 
-    public Trade(String string, String string2) {
-        // TODO Auto-generated constructor stub
+    public Trade() {
+    }
+
+    public Trade(String account, String type) {
+        this.account = account;
+        this.type = type;
     }
 
     @Id
@@ -23,9 +28,11 @@ public class Trade {
     private Integer id;
 
     @Column(name = "account", nullable = false, length = 30)
+    @NotBlank(message = "Account is mandatory")
     private String account;
 
     @Column(name = "type", nullable = false, length = 30)
+    @NotBlank(message = "Type is mandatory")
     private String type;
 
     @Column(name = "buyQuantity")

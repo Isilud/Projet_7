@@ -6,10 +6,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rating")
 public class Rating {
+
+    public Rating() {
+    }
+
+    public Rating(String moodysRating, String sandPRating, String fitchRating, int orderNumber) {
+        this.moodysRating = moodysRating;
+        this.sandPRating = sandPRating;
+        this.fitchRating = fitchRating;
+        this.orderNumber = orderNumber;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,20 +29,20 @@ public class Rating {
     private Integer id;
 
     @Column(name = "moodysRating", length = 125)
+    @NotBlank(message = "MoodysRating is mandatory")
     private String moodysRating;
 
     @Column(name = "sandPRating", length = 125)
+    @NotBlank(message = "SandPRating is mandatory")
     private String sandPRating;
 
     @Column(name = "fitchRating", length = 125)
+    @NotBlank(message = "FitchRating is mandatory")
     private String fitchRating;
 
     @Column(name = "orderNumber")
+    @NotNull(message = "OrderNumber is mandatory")
     private Integer orderNumber;
-
-    public Rating(String string, String string2, String string3, int i) {
-        // TODO Auto-generated constructor stub
-    }
 
     public Integer getId() {
         return id;

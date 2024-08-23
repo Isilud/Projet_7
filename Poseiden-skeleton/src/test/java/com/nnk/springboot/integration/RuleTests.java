@@ -1,47 +1,128 @@
 package com.nnk.springboot.integration;
 
-import com.nnk.springboot.model.RuleName;
-import com.nnk.springboot.repositories.RuleNameRepository;
-
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
+@TestInstance(Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class RuleTests {
 
-	@Autowired
-	private RuleNameRepository ruleNameRepository;
+	private final MockMvc mockMvc;
+
+	public RuleTests(@Autowired MockMvc mockMvc) {
+		this.mockMvc = mockMvc;
+	}
 
 	@Test
-	public void ruleTest() {
-		RuleName rule = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+	public void ruleTest() throws Exception {
+
+		// Initial state
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/ruleName/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("rules"))
+				.andExpect(model().attribute("rules", hasSize(0)));
 
 		// Save
-		rule = ruleNameRepository.save(rule);
-		assertNotNull(rule.getId());
-		assertTrue(rule.getName().equals("Rule Name"));
+		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", "Rule Name")
+				.param("description", "Description")
+				.param("json", "Json")
+				.param("template", "Template")
+				.param("sqlStr", "SQL")
+				.param("sqlPart", "SQL Part"))
+				.andExpect(status().isCreated());
 
-		// Update
-		rule.setName("Rule Name Update");
-		rule = ruleNameRepository.save(rule);
-		assertTrue(rule.getName().equals("Rule Name Update"));
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/ruleName/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("rules"))
+				.andExpect(model().attribute("rules", hasSize(1)));
 
 		// Find
-		List<RuleName> listResult = ruleNameRepository.findAll();
-		assertTrue(listResult.size() > 0);
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/ruleName/update/1"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("rule"))
+				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name"))));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/ruleName/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", "Rule Name Update")
+				.param("description", "Description")
+				.param("json", "Json")
+				.param("template", "Template")
+				.param("sqlStr", "SQL")
+				.param("sqlPart", "SQL Part"))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/ruleName/update/1"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("rule"))
+				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name Update"))));
 
 		// Delete
-		Integer id = rule.getId();
-		ruleNameRepository.delete(rule);
-		Optional<RuleName> ruleList = ruleNameRepository.findById(id);
-		assertFalse(ruleList.isPresent());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/ruleName/delete/1"))
+				.andExpect(status().isNoContent());
+
+		// Final State
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/ruleName/list"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("rules"))
+				.andExpect(model().attribute("rules", hasSize(0)));
+	}
+
+	@Test
+	public void ruleErroredTest() throws Exception {
+
+		// Save
+		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/validate")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("ruleName", "name"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "description"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "json"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "template"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "sqlPart"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "sqlPart"));
+
+		// Update
+		mockMvc.perform(MockMvcRequestBuilders.put("/ruleName/update/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("ruleName", "name"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "description"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "json"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "template"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "sqlPart"))
+				.andExpect(model().attributeHasFieldErrors("ruleName", "sqlPart"));
+
+		// Find
+		mockMvc.perform(MockMvcRequestBuilders.get("/ruleName/update/1"))
+				.andExpect(status().isNotFound());
+
+		// Delete
+		mockMvc.perform(MockMvcRequestBuilders.delete("/ruleName/delete/1"))
+				.andExpect(status().isNotFound());
 	}
 }
