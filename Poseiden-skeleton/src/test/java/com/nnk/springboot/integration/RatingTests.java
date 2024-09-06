@@ -62,7 +62,7 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(10))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("moodysRating", "Moodys Rating")
 				.param("sandPRating", "Sand PRating")
@@ -77,7 +77,7 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(20))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/rating/delete/1"))
 				.andExpect(status().isNoContent());
 
 		// Final State
@@ -101,7 +101,7 @@ public class RatingTests {
 				.andExpect(model().attributeHasFieldErrors("rating", "orderNumber"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("rating", "moodysRating"))
@@ -114,7 +114,7 @@ public class RatingTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/rating/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }

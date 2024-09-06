@@ -1,17 +1,13 @@
 package com.nnk.springboot.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nnk.springboot.exceptions.TradeNotFoundException;
 import com.nnk.springboot.exceptions.TradeValidationException;
@@ -30,20 +26,17 @@ public class TradeController {
     }
 
     @RequestMapping("/trade/list")
-    @ResponseStatus(HttpStatus.OK)
     public String home(Model model) {
         model.addAttribute("trades", tradeService.getAllTrade());
         return "trade/list";
     }
 
     @GetMapping("/trade/add")
-    @ResponseStatus(HttpStatus.OK)
     public String addTradeForm(Trade trade) {
         return "trade/add";
     }
 
     @PostMapping("/trade/validate")
-    @ResponseStatus(HttpStatus.CREATED)
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             tradeService.saveTrade(trade);
@@ -54,7 +47,6 @@ public class TradeController {
     }
 
     @GetMapping("/trade/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Trade trade = tradeService.getTrade(id)
                 .orElseThrow(() -> new TradeNotFoundException(id));
@@ -62,8 +54,7 @@ public class TradeController {
         return "trade/update";
     }
 
-    @PutMapping("/trade/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/trade/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid Trade trade,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -76,8 +67,7 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 
-    @DeleteMapping("/trade/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @GetMapping("/trade/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         Trade trade = tradeService.getTrade(id)
                 .orElseThrow(() -> new TradeNotFoundException(id));

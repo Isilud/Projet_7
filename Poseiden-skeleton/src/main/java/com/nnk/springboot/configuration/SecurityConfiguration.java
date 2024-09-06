@@ -2,19 +2,14 @@ package com.nnk.springboot.configuration;
 
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,8 +21,11 @@ import com.nnk.springboot.services.LoginService;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+
+    public SecurityConfiguration(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,36 +33,37 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> {
-                    requests.requestMatchers("/login/oauth2/code/github").permitAll();
+                    requests.requestMatchers("/", "/login/oauth2/code/github", "/app/login", "/app/error", "/css/*")
+                            .permitAll();
+                    requests.requestMatchers("/user/**").hasRole("ADMIN");
                     requests.anyRequest().authenticated();
                 })
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home", true))
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/bidList/list", true)
+                        .permitAll())
+                .oauth2Login(auth -> auth
+                        .defaultSuccessUrl("/bidList/list", true)
+                        .permitAll())
+                .logout(logout -> logout.logoutUrl("/app-logout").logoutSuccessUrl(
+                        "/app/login").clearAuthentication(true)
+                        .permitAll())
+                .userDetailsService(loginService)
                 .build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return loginService;
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
+            throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(loginService)
+                .passwordEncoder(bCryptPasswordEncoder);
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(loginService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
     }
 
     @Bean

@@ -60,7 +60,7 @@ public class TradeTests {
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account"))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/trade/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/trade/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Trade Account Update")
 				.param("type", "Type"))
@@ -73,7 +73,7 @@ public class TradeTests {
 				.andExpect(model().attribute("trade", hasProperty("account", is("Trade Account Update"))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/trade/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/trade/delete/1"))
 				.andExpect(status().isNoContent());
 
 		// Final State
@@ -95,7 +95,7 @@ public class TradeTests {
 				.andExpect(model().attributeHasFieldErrors("trade", "type"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/trade/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/trade/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("trade", "account"))
@@ -106,7 +106,7 @@ public class TradeTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/trade/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/trade/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }

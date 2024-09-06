@@ -61,7 +61,7 @@ public class CurvePointTests {
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(10))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/curvePoint/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("curveId", "20")
 				.param("term", "10.")
@@ -75,7 +75,7 @@ public class CurvePointTests {
 				.andExpect(model().attribute("curve", hasProperty("curveId", is(20))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/delete/1"))
 				.andExpect(status().isNoContent());
 
 		// Final State
@@ -98,7 +98,7 @@ public class CurvePointTests {
 				.andExpect(model().attributeHasFieldErrors("curve", "amount"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/curvePoint/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("curve", "curveId"))
@@ -110,7 +110,7 @@ public class CurvePointTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/curvePoint/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 
