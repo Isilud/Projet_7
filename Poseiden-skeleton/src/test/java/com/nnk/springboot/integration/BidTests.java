@@ -45,7 +45,7 @@ public class BidTests {
 				.param("account", "Account Test")
 				.param("type", "Type Test")
 				.param("bidQuantity", "10"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
@@ -66,7 +66,7 @@ public class BidTests {
 				.param("account", "Account Test")
 				.param("type", "Type Test")
 				.param("bidQuantity", "20"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/update/1"))
@@ -76,7 +76,7 @@ public class BidTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/bidList/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(

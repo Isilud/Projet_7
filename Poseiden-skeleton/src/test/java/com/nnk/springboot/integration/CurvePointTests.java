@@ -45,7 +45,7 @@ public class CurvePointTests {
 				.param("curveId", "10")
 				.param("term", "10")
 				.param("amount", "30"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/list"))
@@ -66,7 +66,7 @@ public class CurvePointTests {
 				.param("curveId", "20")
 				.param("term", "10.")
 				.param("amount", "30."))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/update/1"))
@@ -76,7 +76,7 @@ public class CurvePointTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(

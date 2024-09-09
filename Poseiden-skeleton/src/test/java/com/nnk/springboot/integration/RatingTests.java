@@ -46,7 +46,7 @@ public class RatingTests {
 				.param("sandPRating", "Sand PRating")
 				.param("fitchRating", "Fitch Rating")
 				.param("orderNumber", "10"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/list"))
@@ -68,7 +68,7 @@ public class RatingTests {
 				.param("sandPRating", "Sand PRating")
 				.param("fitchRating", "Fitch Rating")
 				.param("orderNumber", "20"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/update/1"))
@@ -78,7 +78,7 @@ public class RatingTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/rating/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(

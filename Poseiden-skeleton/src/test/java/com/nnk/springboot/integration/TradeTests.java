@@ -44,7 +44,7 @@ public class TradeTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Trade Account")
 				.param("type", "Type"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/trade/list"))
@@ -64,7 +64,7 @@ public class TradeTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Trade Account Update")
 				.param("type", "Type"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/trade/update/1"))
@@ -74,7 +74,7 @@ public class TradeTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/trade/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(

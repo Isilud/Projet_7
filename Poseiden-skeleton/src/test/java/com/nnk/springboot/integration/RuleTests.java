@@ -48,7 +48,7 @@ public class RuleTests {
 				.param("template", "Template")
 				.param("sqlStr", "SQL")
 				.param("sqlPart", "SQL Part"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/list"))
@@ -72,7 +72,7 @@ public class RuleTests {
 				.param("template", "Template")
 				.param("sqlStr", "SQL")
 				.param("sqlPart", "SQL Part"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/update/1"))
@@ -82,7 +82,7 @@ public class RuleTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/ruleName/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(

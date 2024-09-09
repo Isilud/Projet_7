@@ -46,7 +46,7 @@ public class UserTests {
 				.param("password", "Password")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/list"))
@@ -69,7 +69,7 @@ public class UserTests {
 				.param("password", "Password")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/update/1"))
@@ -80,7 +80,7 @@ public class UserTests {
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/user/delete/1"))
-				.andExpect(status().isNoContent());
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(
