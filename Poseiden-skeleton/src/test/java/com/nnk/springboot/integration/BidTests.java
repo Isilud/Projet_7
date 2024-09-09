@@ -45,7 +45,7 @@ public class BidTests {
 				.param("account", "Account Test")
 				.param("type", "Type Test")
 				.param("bidQuantity", "10"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
@@ -61,12 +61,12 @@ public class BidTests {
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(10d))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/bidList/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Account Test")
 				.param("type", "Type Test")
 				.param("bidQuantity", "20"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/update/1"))
@@ -75,8 +75,8 @@ public class BidTests {
 				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(20d))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/bidList/delete/1"))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(MockMvcRequestBuilders.get("/bidList/delete/1"))
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(
@@ -99,7 +99,7 @@ public class BidTests {
 				.andExpect(model().attributeHasFieldErrors("bidList", "bidQuantity"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/bidList/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("bidList", "account"))
@@ -111,7 +111,7 @@ public class BidTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/bidList/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/bidList/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }

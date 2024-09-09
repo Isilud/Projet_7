@@ -62,14 +62,6 @@ public class CurvePoint {
         this.curveId = curveId;
     }
 
-    public LocalDateTime getAsOfDate() {
-        return asOfDate;
-    }
-
-    public void setAsOfDate(LocalDateTime asOfDate) {
-        this.asOfDate = asOfDate;
-    }
-
     public Double getTerm() {
         return term;
     }
@@ -84,13 +76,5 @@ public class CurvePoint {
 
     public void setAmount(Double amount) {
         this.amount = amount;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 }

@@ -46,7 +46,7 @@ public class UserTests {
 				.param("password", "Password")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/list"))
@@ -63,13 +63,13 @@ public class UserTests {
 				.andExpect(model().attribute("user", hasProperty("password", is(""))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/user/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/user/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("username", "Username Updated")
 				.param("password", "Password")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/user/update/1"))
@@ -79,8 +79,8 @@ public class UserTests {
 				.andExpect(model().attribute("user", hasProperty("password", is(""))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/user/delete/1"))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/delete/1"))
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(
@@ -103,7 +103,7 @@ public class UserTests {
 				.andExpect(model().attributeHasFieldErrors("user", "role"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/user/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/user/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("user", "username"))
@@ -116,7 +116,7 @@ public class UserTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/user/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/user/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }

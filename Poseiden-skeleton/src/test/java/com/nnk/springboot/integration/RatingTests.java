@@ -46,7 +46,7 @@ public class RatingTests {
 				.param("sandPRating", "Sand PRating")
 				.param("fitchRating", "Fitch Rating")
 				.param("orderNumber", "10"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/list"))
@@ -62,13 +62,13 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(10))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("moodysRating", "Moodys Rating")
 				.param("sandPRating", "Sand PRating")
 				.param("fitchRating", "Fitch Rating")
 				.param("orderNumber", "20"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/rating/update/1"))
@@ -77,8 +77,8 @@ public class RatingTests {
 				.andExpect(model().attribute("rating", hasProperty("orderNumber", is(20))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(MockMvcRequestBuilders.get("/rating/delete/1"))
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(
@@ -101,7 +101,7 @@ public class RatingTests {
 				.andExpect(model().attributeHasFieldErrors("rating", "orderNumber"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/rating/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/rating/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("rating", "moodysRating"))
@@ -114,7 +114,7 @@ public class RatingTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/rating/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/rating/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }

@@ -48,7 +48,7 @@ public class RuleTests {
 				.param("template", "Template")
 				.param("sqlStr", "SQL")
 				.param("sqlPart", "SQL Part"))
-				.andExpect(status().isCreated());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/list"))
@@ -64,7 +64,7 @@ public class RuleTests {
 				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name"))));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/ruleName/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("name", "Rule Name Update")
 				.param("description", "Description")
@@ -72,7 +72,7 @@ public class RuleTests {
 				.param("template", "Template")
 				.param("sqlStr", "SQL")
 				.param("sqlPart", "SQL Part"))
-				.andExpect(status().isOk());
+				.andExpect(status().isFound());
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/update/1"))
@@ -81,8 +81,8 @@ public class RuleTests {
 				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name Update"))));
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/ruleName/delete/1"))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(MockMvcRequestBuilders.get("/ruleName/delete/1"))
+				.andExpect(status().isFound());
 
 		// Final State
 		mockMvc.perform(
@@ -107,7 +107,7 @@ public class RuleTests {
 				.andExpect(model().attributeHasFieldErrors("ruleName", "sqlPart"));
 
 		// Update
-		mockMvc.perform(MockMvcRequestBuilders.put("/ruleName/update/1")
+		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("ruleName", "name"))
@@ -122,7 +122,7 @@ public class RuleTests {
 				.andExpect(status().isNotFound());
 
 		// Delete
-		mockMvc.perform(MockMvcRequestBuilders.delete("/ruleName/delete/1"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/ruleName/delete/1"))
 				.andExpect(status().isNotFound());
 	}
 }
