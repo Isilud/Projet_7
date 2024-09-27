@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "trade")
@@ -17,9 +18,10 @@ public class Trade {
     public Trade() {
     }
 
-    public Trade(String account, String type) {
+    public Trade(String account, String type, Double buyQuantity) {
         this.account = account;
         this.type = type;
+        this.buyQuantity = buyQuantity;
     }
 
     @Id
@@ -36,6 +38,7 @@ public class Trade {
     private String type;
 
     @Column(name = "buyQuantity")
+    @NotNull(message = "buyQuantity is mandatory")
     private Double buyQuantity;
 
     @Column(name = "sellQuantity")
@@ -112,4 +115,13 @@ public class Trade {
     public void setType(String type) {
         this.type = type;
     }
+
+    public Double getBuyQuantity() {
+        return buyQuantity;
+    }
+
+    public void setBuyQuantity(Double buyQuantity) {
+        this.buyQuantity = buyQuantity;
+    }
+
 }

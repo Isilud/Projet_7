@@ -29,7 +29,7 @@ public class TradeServiceTest {
 
     @BeforeEach
     public void setup() {
-        defaultTrade = new Trade("account", "type");
+        defaultTrade = new Trade("account", "type", 10.);
         tradeService = new TradeService(tradeRepository);
     }
 

@@ -25,7 +25,7 @@ public class BidListController {
 
     @GetMapping("/bidList/list")
     public String home(Model model) {
-        model.addAttribute("bids", bidListService.getAllBidList());
+        model.addAttribute("bidLists", bidListService.getAllBidList());
         return "bidList/list";
     }
 
@@ -38,17 +38,17 @@ public class BidListController {
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             bidListService.saveBidList(bid);
-            model.addAttribute("bids", bidListService.getAllBidList());
+            model.addAttribute("bidLists", bidListService.getAllBidList());
             return "redirect:/bidList/list";
         }
-        throw new BidListValidationException("bidList/update", result);
+        throw new BidListValidationException("bidList/add", result);
     }
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         BidList bid = bidListService.getBidList(id)
                 .orElseThrow(() -> new BidListNotFoundException(id));
-        model.addAttribute("bid", bid);
+        model.addAttribute("bidList", bid);
         return "bidList/update";
     }
 
@@ -62,7 +62,7 @@ public class BidListController {
 
         bidList.setBidListId(id);
         bidListService.saveBidList(bidList);
-        model.addAttribute("bids", bidListService.getAllBidList());
+        model.addAttribute("bidLists", bidListService.getAllBidList());
         return "redirect:/bidList/list";
     }
 
@@ -71,7 +71,7 @@ public class BidListController {
         BidList bidList = bidListService.getBidList(id)
                 .orElseThrow(() -> new BidListNotFoundException(id));
         bidListService.deleteBidList(bidList);
-        model.addAttribute("bids", bidListService.getAllBidList());
+        model.addAttribute("bidLists", bidListService.getAllBidList());
         return "redirect:/bidList/list";
     }
 }

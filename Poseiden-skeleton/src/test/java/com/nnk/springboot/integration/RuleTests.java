@@ -36,8 +36,8 @@ public class RuleTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("rules"))
-				.andExpect(model().attribute("rules", hasSize(0)));
+				.andExpect(model().attributeExists("ruleNames"))
+				.andExpect(model().attribute("ruleNames", hasSize(0)));
 
 		// Save
 		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/validate")
@@ -53,15 +53,15 @@ public class RuleTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("rules"))
-				.andExpect(model().attribute("rules", hasSize(1)));
+				.andExpect(model().attributeExists("ruleNames"))
+				.andExpect(model().attribute("ruleNames", hasSize(1)));
 
 		// Find
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("rule"))
-				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name"))));
+				.andExpect(model().attributeExists("ruleName"))
+				.andExpect(model().attribute("ruleName", hasProperty("name", is("Rule Name"))));
 
 		// Update
 		mockMvc.perform(MockMvcRequestBuilders.post("/ruleName/update/1")
@@ -77,8 +77,8 @@ public class RuleTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("rule"))
-				.andExpect(model().attribute("rule", hasProperty("name", is("Rule Name Update"))));
+				.andExpect(model().attributeExists("ruleName"))
+				.andExpect(model().attribute("ruleName", hasProperty("name", is("Rule Name Update"))));
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/ruleName/delete/1"))
@@ -88,8 +88,8 @@ public class RuleTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/ruleName/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("rules"))
-				.andExpect(model().attribute("rules", hasSize(0)));
+				.andExpect(model().attributeExists("ruleNames"))
+				.andExpect(model().attribute("ruleNames", hasSize(0)));
 	}
 
 	@Test

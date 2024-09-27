@@ -29,7 +29,7 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setup() {
-        defaultUser = new User("Username", "Password", "Fullname", "User");
+        defaultUser = new User("Username", "Password$10", "Fullname", "User");
         userService = new UserService(userRepository);
     }
 

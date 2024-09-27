@@ -36,8 +36,8 @@ public class CurvePointTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("curves"))
-				.andExpect(model().attribute("curves", hasSize(0)));
+				.andExpect(model().attributeExists("curvePoints"))
+				.andExpect(model().attribute("curvePoints", hasSize(0)));
 
 		// Save
 		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
@@ -50,15 +50,15 @@ public class CurvePointTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("curves"))
-				.andExpect(model().attribute("curves", hasSize(1)));
+				.andExpect(model().attributeExists("curvePoints"))
+				.andExpect(model().attribute("curvePoints", hasSize(1)));
 
 		// Find
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("curve"))
-				.andExpect(model().attribute("curve", hasProperty("curveId", is(10))));
+				.andExpect(model().attributeExists("curvePoint"))
+				.andExpect(model().attribute("curvePoint", hasProperty("curveId", is(10))));
 
 		// Update
 		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1")
@@ -71,8 +71,8 @@ public class CurvePointTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("curve"))
-				.andExpect(model().attribute("curve", hasProperty("curveId", is(20))));
+				.andExpect(model().attributeExists("curvePoint"))
+				.andExpect(model().attribute("curvePoint", hasProperty("curveId", is(20))));
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/delete/1"))
@@ -82,8 +82,8 @@ public class CurvePointTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/curvePoint/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("curves"))
-				.andExpect(model().attribute("curves", hasSize(0)));
+				.andExpect(model().attributeExists("curvePoints"))
+				.andExpect(model().attribute("curvePoints", hasSize(0)));
 	}
 
 	@Test
@@ -93,17 +93,17 @@ public class CurvePointTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
-				.andExpect(model().attributeHasFieldErrors("curve", "curveId"))
-				.andExpect(model().attributeHasFieldErrors("curve", "term"))
-				.andExpect(model().attributeHasFieldErrors("curve", "amount"));
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "curveId"))
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "term"))
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "amount"));
 
 		// Update
 		mockMvc.perform(MockMvcRequestBuilders.post("/curvePoint/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
-				.andExpect(model().attributeHasFieldErrors("curve", "curveId"))
-				.andExpect(model().attributeHasFieldErrors("curve", "term"))
-				.andExpect(model().attributeHasFieldErrors("curve", "amount"));
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "curveId"))
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "term"))
+				.andExpect(model().attributeHasFieldErrors("curvePoint", "amount"));
 
 		// Find
 		mockMvc.perform(MockMvcRequestBuilders.get("/curvePoint/update/1"))

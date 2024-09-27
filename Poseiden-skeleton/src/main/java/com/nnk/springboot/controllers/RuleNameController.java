@@ -27,7 +27,7 @@ public class RuleNameController {
 
     @RequestMapping("/ruleName/list")
     public String home(Model model) {
-        model.addAttribute("rules", ruleNameService.getAllRuleName());
+        model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
         return "ruleName/list";
     }
 
@@ -40,7 +40,7 @@ public class RuleNameController {
     public String validate(@Valid RuleName rule, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             ruleNameService.saveRuleName(rule);
-            model.addAttribute("rules", ruleNameService.getAllRuleName());
+            model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
             return "redirect:/ruleName/list";
         }
         throw new RuleValidationException("ruleName/update", result);
@@ -50,7 +50,7 @@ public class RuleNameController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         RuleName rule = ruleNameService.getRuleName(id)
                 .orElseThrow(() -> new RuleNotFoundException(id));
-        model.addAttribute("rule", rule);
+        model.addAttribute("ruleName", rule);
         return "ruleName/update";
     }
 
@@ -73,7 +73,7 @@ public class RuleNameController {
         RuleName rule = ruleNameService.getRuleName(id)
                 .orElseThrow(() -> new RuleNotFoundException(id));
         ruleNameService.deleteRuleName(rule);
-        model.addAttribute("rules", ruleNameService.getAllRuleName());
+        model.addAttribute("ruleNames", ruleNameService.getAllRuleName());
         return "redirect:/ruleName/list";
     }
 }

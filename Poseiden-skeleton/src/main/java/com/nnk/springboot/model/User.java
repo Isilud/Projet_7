@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +33,7 @@ public class User {
 
     @Column(nullable = false)
     @NotNull(message = "Password is mandatory")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%?&.])[A-Za-z\\d@$!%?&.]{8,}$", message = "Password must contain at least 8 characters, one uppercase letter, one number, and one special character")
     private String password;
 
     @Column(nullable = false)

@@ -43,7 +43,7 @@ public class UserTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/user/validate")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("username", "Username")
-				.param("password", "Password")
+				.param("password", "Password.1")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
 				.andExpect(status().isFound());
@@ -66,7 +66,7 @@ public class UserTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/user/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("username", "Username Updated")
-				.param("password", "Password")
+				.param("password", "Password.1")
 				.param("fullname", "Fullname")
 				.param("role", "USER"))
 				.andExpect(status().isFound());

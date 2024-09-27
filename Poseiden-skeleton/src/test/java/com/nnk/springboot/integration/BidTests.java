@@ -36,8 +36,8 @@ public class BidTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("bids"))
-				.andExpect(model().attribute("bids", hasSize(0)));
+				.andExpect(model().attributeExists("bidLists"))
+				.andExpect(model().attribute("bidLists", hasSize(0)));
 
 		// Save
 		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/validate")
@@ -50,15 +50,15 @@ public class BidTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("bids"))
-				.andExpect(model().attribute("bids", hasSize(1)));
+				.andExpect(model().attributeExists("bidLists"))
+				.andExpect(model().attribute("bidLists", hasSize(1)));
 
 		// Find
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("bid"))
-				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(10d))));
+				.andExpect(model().attributeExists("bidList"))
+				.andExpect(model().attribute("bidList", hasProperty("bidQuantity", is(10d))));
 
 		// Update
 		mockMvc.perform(MockMvcRequestBuilders.post("/bidList/update/1")
@@ -71,8 +71,8 @@ public class BidTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/update/1"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("bid"))
-				.andExpect(model().attribute("bid", hasProperty("bidQuantity", is(20d))));
+				.andExpect(model().attributeExists("bidList"))
+				.andExpect(model().attribute("bidList", hasProperty("bidQuantity", is(20d))));
 
 		// Delete
 		mockMvc.perform(MockMvcRequestBuilders.get("/bidList/delete/1"))
@@ -82,8 +82,8 @@ public class BidTests {
 		mockMvc.perform(
 				MockMvcRequestBuilders.get("/bidList/list"))
 				.andExpect(status().isOk())
-				.andExpect(model().attributeExists("bids"))
-				.andExpect(model().attribute("bids", hasSize(0)));
+				.andExpect(model().attributeExists("bidLists"))
+				.andExpect(model().attribute("bidLists", hasSize(0)));
 
 	}
 

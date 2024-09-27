@@ -39,8 +39,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CurveValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleCurveValidationException(CurveValidationException ex, Model model) {
-        model.addAttribute("org.springframework.validation.BindingResult.curve", ex.getErrors());
-        model.addAttribute("curve", ex.getErrors().getTarget());
+        model.addAttribute("org.springframework.validation.BindingResult.curvePoint", ex.getErrors());
+        model.addAttribute("curvePoint", ex.getErrors().getTarget());
         return ex.getPath();
     }
 

@@ -43,7 +43,8 @@ public class TradeTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/trade/validate")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Trade Account")
-				.param("type", "Type"))
+				.param("type", "Type")
+				.param("buyQuantity", "10."))
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
@@ -63,7 +64,9 @@ public class TradeTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/trade/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("account", "Trade Account Update")
-				.param("type", "Type"))
+				.param("type", "Type")
+				.param("buyQuantity",
+						"10."))
 				.andExpect(status().isFound());
 
 		mockMvc.perform(
@@ -92,14 +95,16 @@ public class TradeTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("trade", "account"))
-				.andExpect(model().attributeHasFieldErrors("trade", "type"));
+				.andExpect(model().attributeHasFieldErrors("trade", "type"))
+				.andExpect(model().attributeHasFieldErrors("trade", "buyQuantity"));
 
 		// Update
 		mockMvc.perform(MockMvcRequestBuilders.post("/trade/update/1")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
 				.andExpect(status().isBadRequest())
 				.andExpect(model().attributeHasFieldErrors("trade", "account"))
-				.andExpect(model().attributeHasFieldErrors("trade", "type"));
+				.andExpect(model().attributeHasFieldErrors("trade", "type"))
+				.andExpect(model().attributeHasFieldErrors("trade", "buyQuantity"));
 
 		// Find
 		mockMvc.perform(MockMvcRequestBuilders.get("/trade/update/1"))

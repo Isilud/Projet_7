@@ -27,7 +27,7 @@ public class CurveController {
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
-        model.addAttribute("curves", curvePointService.getAllCurvePoint());
+        model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
         return "curvePoint/list";
     }
 
@@ -40,7 +40,7 @@ public class CurveController {
     public String validate(@Valid CurvePoint curve, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             curvePointService.saveCurvePoint(curve);
-            model.addAttribute("curves", curvePointService.getAllCurvePoint());
+            model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
             return "redirect:/curvePoint/list";
         }
         throw new CurveValidationException("curvePoint/add", result);
@@ -50,7 +50,7 @@ public class CurveController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         CurvePoint curve = curvePointService.getCurvePoint(id)
                 .orElseThrow(() -> new CurveNotFoundException(id));
-        model.addAttribute("curve", curve);
+        model.addAttribute("curvePoint", curve);
         return "curvePoint/update";
     }
 
@@ -73,7 +73,7 @@ public class CurveController {
         CurvePoint curve = curvePointService.getCurvePoint(id)
                 .orElseThrow(() -> new CurveNotFoundException(id));
         curvePointService.deleteCurvePoint(curve);
-        model.addAttribute("curves", curvePointService.getAllCurvePoint());
+        model.addAttribute("curvePoints", curvePointService.getAllCurvePoint());
         return "redirect:/curvePoint/list";
     }
 }
